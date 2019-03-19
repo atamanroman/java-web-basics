@@ -1,4 +1,4 @@
-package com.github.atamanroman.workshops.banking;
+package com.github.atamanroman.workshops.banking.domain;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

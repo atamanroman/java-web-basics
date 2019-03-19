@@ -1,4 +1,4 @@
-package com.github.atamanroman.workshops.banking;
+package com.github.atamanroman.workshops.banking.domain;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.fail;

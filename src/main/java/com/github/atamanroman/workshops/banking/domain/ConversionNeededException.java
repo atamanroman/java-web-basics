@@ -1,4 +1,4 @@
-package com.github.atamanroman.workshops.banking;
+package com.github.atamanroman.workshops.banking.domain;
 
 public class ConversionNeededException extends BankingException {
 
