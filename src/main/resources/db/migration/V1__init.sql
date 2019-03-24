@@ -1,6 +1,6 @@
 CREATE TABLE accounts (
   owner varchar(255) not null,
-  iban varchar(255) not null,
+  iban varchar(255) primary key,
   currency varchar(255) not null,
   saldo integer not null
 );

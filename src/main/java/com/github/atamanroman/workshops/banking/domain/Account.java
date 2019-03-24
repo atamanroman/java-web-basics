@@ -1,5 +1,6 @@
 package com.github.atamanroman.workshops.banking.domain;
 
+import com.github.atamanroman.workshops.banking.infrastructure.Params;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,26 +18,18 @@ public class Account {
     this(iban, saldo, currency, owner, new ArrayList<>());
   }
 
-  public Account(String iban, int saldo, String currency, String owner,
-      List<Transaction> transactions) {
-    if (iban == null) {
-      throw new IllegalArgumentException("iban must not be null");
-    }
-    if (currency == null) {
-      throw new IllegalArgumentException("currency must not be null");
-    }
-    if (owner == null) {
-      throw new IllegalArgumentException("owner must not be null");
-    }
-    if (transactions == null) {
-      throw new IllegalArgumentException("transactions must not be null");
-    }
-
-    this.iban = iban;
-    this.saldo = saldo;
-    this.currency = currency;
-    this.owner = owner;
-    this.transactions = transactions;
+  public Account(
+      String iban,
+      int saldo,
+      String currency,
+      String owner,
+      List<Transaction> transactions
+  ) {
+    this.iban = Params.notNull(iban, "iban");
+    this.saldo = Params.notNull(saldo, "saldo");
+    this.currency = Params.notNull(currency, "currency");
+    this.owner = Params.notNull(owner, "owner");
+    this.transactions = Params.notNull(transactions, "transactions");
   }
 
   public String getIban() {
@@ -60,12 +53,8 @@ public class Account {
   }
 
   public Transaction sendMoney(AccountReference creditor, Money amount) {
-    if (creditor == null) {
-      throw new IllegalArgumentException("creditor must not be null");
-    }
-    if (amount == null) {
-      throw new IllegalArgumentException("amount must not be null");
-    }
+    Params.notNull(creditor, "creditor");
+    Params.notNull(amount, "amount");
     if (!Objects.equals(amount.getCurrency(), currency)) {
       throw new ConversionNeededException();
     }
@@ -74,7 +63,7 @@ public class Account {
     }
 
     saldo -= amount.getAmount();
-    var newTx = new Transaction(toReference(), creditor, amount, LocalDate.now());
+    var newTx = new Transaction(iban, toReference(), creditor, amount, LocalDate.now());
     transactions.add(newTx);
     return newTx;
   }
@@ -83,4 +72,31 @@ public class Account {
     return new AccountReference(owner, iban);
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Account account = (Account) o;
+    return iban.equals(account.iban);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(iban);
+  }
+
+  @Override
+  public String toString() {
+    return "Account{" +
+        "iban='" + iban + '\'' +
+        ", owner='" + owner + '\'' +
+        ", transactions=" + transactions +
+        ", saldo=" + saldo +
+        ", currency='" + currency + '\'' +
+        '}';
+  }
 }
