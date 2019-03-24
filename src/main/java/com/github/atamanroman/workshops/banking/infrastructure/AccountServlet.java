@@ -17,11 +17,12 @@ public class AccountServlet extends HttpServlet {
 
   private static Logger log = LoggerFactory.getLogger(AccountServlet.class);
 
-  private ObjectMapper objectMapper = new ObjectMapper();
+  private ObjectMapper objectMapper;
   private BankingService bankingService;
 
-  public AccountServlet(BankingService bankingService) {
-    this.bankingService = bankingService;
+  public AccountServlet(BankingService bankingService, ObjectMapper objectMapper) {
+    this.bankingService = Params.notNull(bankingService, "bankingService");
+    this.objectMapper = Params.notNull(objectMapper, "objectMapper");
   }
 
   @Override
@@ -38,7 +39,7 @@ public class AccountServlet extends HttpServlet {
 
     Optional<Account> account = iban.flatMap(bankingService::readAccount);
     account.ifPresentOrElse(s -> resp.setStatus(200), () -> resp.setStatus(404));
-    String json = account
+    var json = account
         .map(this::writeJson)
         .orElseGet(
             () -> writeJson(new HttpError(404, "Account with iban=" + iban.get() + " not found!"))
