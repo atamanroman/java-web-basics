@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,33 +42,18 @@ public class AccountRepository {
     Params.notNull(currency, "currency");
 
     var account = new Account(iban, saldo, currency, owner);
-    EntityManager em = emf.createEntityManager();
-    EntityTransaction tx = em.getTransaction();
-    tx.begin();
-    try {
+    Transactional.doInTransaction(emf, em -> {
       em.persist(account);
-    } catch (Exception e) {
-      tx.rollback();
-      throw e;
-    }
-    tx.commit();
+    });
     return account;
   }
 
   public Account saveAccount(Account account) {
     Params.notNull(account, "account");
 
-    EntityManager em = emf.createEntityManager();
-    EntityTransaction tx = em.getTransaction();
-    tx.begin();
-    try {
+    return Transactional.doInTransaction(emf, (em) -> {
       account.getTransactions().forEach(em::merge);
-      Account result = em.merge(account);
-      tx.commit();
-      return result;
-    } catch (Exception e) {
-      tx.rollback();
-      throw e;
-    }
+      return em.merge(account);
+    });
   }
 }
