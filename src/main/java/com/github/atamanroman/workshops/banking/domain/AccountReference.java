@@ -2,17 +2,20 @@ package com.github.atamanroman.workshops.banking.domain;
 
 import com.github.atamanroman.workshops.banking.infrastructure.Params;
 import java.util.Objects;
+import javax.persistence.Embeddable;
 
+@Embeddable
 public class AccountReference {
 
   private String owner;
   private String iban;
 
+  private AccountReference() {
+  }
+
   public AccountReference(String owner, String iban) {
     this.owner = Params.notNull(owner, "owner");
-    ;
     this.iban = Params.notNull(iban, "iban");
-    ;
   }
 
   public String getOwner() {

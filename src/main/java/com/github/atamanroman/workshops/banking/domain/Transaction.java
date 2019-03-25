@@ -4,15 +4,33 @@ import com.github.atamanroman.workshops.banking.infrastructure.Params;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
+@Entity
 public class Transaction {
 
+  @Id
   private UUID id;
   private String account;
+  @Embedded
   private AccountReference debtor;
+  @Embedded
   private AccountReference creditor;
+  @Embedded
+  @AttributeOverrides({
+      @AttributeOverride(name = "amount", column = @Column(name = "amount")),
+      @AttributeOverride(name = "currency", column = @Column(name = "currency"))
+  })
   private Money money;
   private LocalDate bookingDate;
+
+  private Transaction() {
+  }
 
   public Transaction(
       String account,

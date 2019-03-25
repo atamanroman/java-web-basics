@@ -1,11 +1,16 @@
 package com.github.atamanroman.workshops.banking.domain;
 
 import java.util.Objects;
+import javax.persistence.Embeddable;
 
+@Embeddable
 public class Money {
 
   private String currency;
   private int amount;
+
+  private Money() {
+  }
 
   public Money(String currency, int amount) {
     if (currency == null) {

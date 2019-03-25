@@ -9,28 +9,29 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.github.atamanroman.workshops.banking.domain.AccountRepository;
 import com.github.atamanroman.workshops.banking.domain.BankingService;
-import com.zaxxer.hikari.HikariDataSource;
+import java.util.HashMap;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.sql.DataSource;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.flywaydb.core.Flyway;
+import org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.ConnectionProviderJdbcConnectionAccess;
+import org.hibernate.internal.SessionFactoryImpl;
 import org.slf4j.LoggerFactory;
 
 public class WebApplication {
-
-  private static HikariDataSource dataSource;
 
   public static void main(String[] args) throws Exception {
 
     Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
     root.setLevel(Level.INFO);
 
-    dataSource = new HikariDataSource();
-    dataSource.setJdbcUrl("jdbc:h2:mem:banking;DB_CLOSE_DELAY=-1");
-    dataSource.setUsername("admin");
-    dataSource.setPassword("secret");
+    EntityManagerFactory emf = Persistence
+        .createEntityManagerFactory("java-web-basics", new HashMap());
 
-    var flyway = Flyway.configure().dataSource(dataSource).load();
+    var flyway = Flyway.configure().dataSource(getDataSource(emf)).load();
     flyway.migrate();
 
     var objectMapper = new ObjectMapper()
@@ -39,7 +40,7 @@ public class WebApplication {
         .registerModule(new JavaTimeModule())
         .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
-    var accountRepository = new AccountRepository(dataSource);
+    var accountRepository = new AccountRepository(emf);
     new SampleDataService(accountRepository).init();
     var bankingService = new BankingService(accountRepository);
 
@@ -52,6 +53,14 @@ public class WebApplication {
     server.setHandler(servletHandler);
     server.start();
     server.join();
+  }
+
+  private static DataSource getDataSource(EntityManagerFactory emf) {
+    var connectionAccess = ((SessionFactoryImpl) emf).getJdbcServices()
+        .getBootstrapJdbcConnectionAccess();
+    var connectionProvider = ((ConnectionProviderJdbcConnectionAccess) connectionAccess)
+        .getConnectionProvider();
+    return connectionProvider.unwrap(DataSource.class);
   }
 
 }

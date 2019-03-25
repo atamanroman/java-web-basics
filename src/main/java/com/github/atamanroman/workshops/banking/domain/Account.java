@@ -5,14 +5,23 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
+@Entity
 public class Account {
 
+  @Id
   private String iban;
   private String owner;
+  @OneToMany(mappedBy = "account")
   private List<Transaction> transactions;
   private int saldo;
   private String currency;
+
+  private Account() {
+  }
 
   public Account(String iban, int saldo, String currency, String owner) {
     this(iban, saldo, currency, owner, new ArrayList<>());
