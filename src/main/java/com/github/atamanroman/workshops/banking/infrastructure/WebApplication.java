@@ -23,15 +23,16 @@ import org.slf4j.LoggerFactory;
 
 public class WebApplication {
 
+
   public static void main(String[] args) throws Exception {
 
     Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
     root.setLevel(Level.INFO);
 
-    EntityManagerFactory emf = Persistence
+    Transactional.emf = Persistence
         .createEntityManagerFactory("java-web-basics", new HashMap());
 
-    var flyway = Flyway.configure().dataSource(getDataSource(emf)).load();
+    var flyway = Flyway.configure().dataSource(getDataSource(Transactional.emf)).load();
     flyway.migrate();
 
     var objectMapper = new ObjectMapper()
@@ -40,7 +41,7 @@ public class WebApplication {
         .registerModule(new JavaTimeModule())
         .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
-    var accountRepository = new AccountRepository(emf);
+    var accountRepository = new AccountRepository();
     new SampleDataService(accountRepository).init();
     var bankingService = new BankingService(accountRepository);
 
