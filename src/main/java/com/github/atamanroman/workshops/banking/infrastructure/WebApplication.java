@@ -9,7 +9,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.github.atamanroman.workshops.banking.domain.AccountRepository;
 import com.github.atamanroman.workshops.banking.domain.BankingService;
-import java.util.HashMap;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.sql.DataSource;
@@ -27,10 +26,10 @@ public class WebApplication {
   public static void main(String[] args) throws Exception {
 
     Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-    root.setLevel(Level.INFO);
+    root.setLevel(Level.toLevel(System.getProperty("sample.log.level"), Level.INFO));
 
     Transactional.emf = Persistence
-        .createEntityManagerFactory("java-web-basics", new HashMap());
+        .createEntityManagerFactory("java-web-basics");
 
     var flyway = Flyway.configure().dataSource(getDataSource(Transactional.emf)).load();
     flyway.migrate();
