@@ -17,11 +17,12 @@ public class BankingService {
   }
 
   public List<Account> readAccounts() {
-    return accountRepository.getAccounts();
-    }
+    return accountRepository.findAll();
+  }
 
   public Optional<Account> readAccount(String iban) {
     Params.notNull(iban, "iban");
-    return accountRepository.getAccountByIban(iban);
+    return accountRepository.findByIban(iban);
+
   }
 }

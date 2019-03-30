@@ -19,7 +19,7 @@ public class SampleDataServiceTest {
   private BankingService bankingService;
 
   @Test
-  public void accountSizeTest(){
+  public void accountSizeTest() {
     assertNotNull(bankingService);
 
     assertThat(bankingService.readAccounts(), hasSize(3));

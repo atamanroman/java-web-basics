@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -15,7 +16,7 @@ public class Account {
   @Id
   private String iban;
   private String owner;
-  @OneToMany(mappedBy = "account")
+  @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
   private List<Transaction> transactions;
   private int saldo;
   private String currency;
