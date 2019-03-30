@@ -24,6 +24,12 @@
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-core</artifactId>
+      <version>2.0.0</version>
+      <scope>test</scope>
+    </dependency>
 
     <dependency>
       <groupId>com.google.code.findbugs</groupId>
@@ -95,8 +101,6 @@
       <artifactId>javax.el</artifactId>
       <version>3.0.1-b09</version>
     </dependency>
-
-
 
     <dependency>
       <groupId>ch.qos.logback</groupId>
