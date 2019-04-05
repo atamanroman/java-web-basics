@@ -11,7 +11,7 @@ CREATE TABLE transaction (
   debtor_iban varchar(255) not null,
   creditor_owner varchar(255) not null,
   creditor_iban varchar(255) not null,
-  bookingdate date not null,
+  booking_date date not null,
   amount integer not null,
   currency varchar(255) not null,
   account varchar(255) not null,

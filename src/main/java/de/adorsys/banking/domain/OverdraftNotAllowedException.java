@@ -1,4 +1,4 @@
-package com.github.atamanroman.workshops.banking.domain;
+package de.adorsys.banking.domain;
 
 public class OverdraftNotAllowedException extends BankingException {
 

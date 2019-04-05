@@ -1,6 +1,6 @@
-package com.github.atamanroman.workshops.banking.domain;
+package de.adorsys.banking.domain;
 
-import com.github.atamanroman.workshops.banking.infrastructure.Params;
+import de.adorsys.banking.infrastructure.Params;
 import java.util.Objects;
 import javax.persistence.Embeddable;
 

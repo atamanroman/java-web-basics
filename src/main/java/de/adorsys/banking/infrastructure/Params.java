@@ -1,4 +1,4 @@
-package com.github.atamanroman.workshops.banking.infrastructure;
+package de.adorsys.banking.infrastructure;
 
 public class Params {
 

@@ -1,22 +1,28 @@
-package com.github.atamanroman.workshops.banking.domain;
+package de.adorsys.banking.domain;
 
-import com.github.atamanroman.workshops.banking.infrastructure.Params;
+import de.adorsys.banking.infrastructure.Params;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class AccountRepository {
 
   private static Logger log = LoggerFactory.getLogger(AccountRepository.class);
 
-  public List<Account> getAccounts(EntityManager em) {
+  @PersistenceContext
+  EntityManager em;
+
+  public List<Account> getAccounts() {
     return em.createQuery("FROM Account", Account.class).getResultList();
   }
 
-  public Optional<Account> getAccountByIban(String iban, EntityManager em) {
+  public Optional<Account> getAccountByIban(String iban) {
     Params.notNull(iban, "iban");
 
     TypedQuery<Account> query = em.createQuery(
@@ -29,18 +35,18 @@ public class AccountRepository {
   }
 
   public Account createAccount(
-      String iban, String owner, String currency, int saldo, EntityManager em
+      String iban, String owner, String currency, int saldo
   ) {
     Params.notNull(iban, "iban");
     Params.notNull(owner, "owner");
     Params.notNull(currency, "currency");
 
-    var account = new Account(iban, saldo, currency, owner);
+    Account account = new Account(iban, saldo, currency, owner);
     em.persist(account);
     return account;
   }
 
-  public Account saveAccount(Account account, EntityManager em) {
+  public Account saveAccount(Account account) {
     Params.notNull(account, "account");
     account.getTransactions().forEach(em::merge);
     return em.merge(account);

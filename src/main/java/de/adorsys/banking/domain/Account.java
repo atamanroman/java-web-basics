@@ -1,6 +1,6 @@
-package com.github.atamanroman.workshops.banking.domain;
+package de.adorsys.banking.domain;
 
-import com.github.atamanroman.workshops.banking.infrastructure.Params;
+import de.adorsys.banking.infrastructure.Params;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +72,7 @@ public class Account {
     }
 
     saldo -= amount.getAmount();
-    var newTx = new Transaction(iban, toReference(), creditor, amount, LocalDate.now());
+    Transaction newTx = new Transaction(iban, toReference(), creditor, amount, LocalDate.now());
     transactions.add(newTx);
     return newTx;
   }

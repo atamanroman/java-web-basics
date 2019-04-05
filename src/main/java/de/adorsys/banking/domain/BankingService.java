@@ -1,7 +1,6 @@
-package com.github.atamanroman.workshops.banking.domain;
+package de.adorsys.banking.domain;
 
-import com.github.atamanroman.workshops.banking.infrastructure.Params;
-import com.github.atamanroman.workshops.banking.infrastructure.Transactional;
+import de.adorsys.banking.infrastructure.Params;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,16 +13,11 @@ public class BankingService {
   }
 
   public List<Account> readAccounts() {
-    return Transactional.run(em -> {
-      return accountRepository.getAccounts(em);
-    });
-  }
+    return accountRepository.getAccounts();
+    }
 
   public Optional<Account> readAccount(String iban) {
     Params.notNull(iban, "iban");
-    return Transactional.run(em -> {
-      return accountRepository.getAccountByIban(iban, em);
-    });
-
+    return accountRepository.getAccountByIban(iban);
   }
 }
