@@ -1,7 +1,7 @@
 package de.adorsys.banking.infrastructure;
 
 import de.adorsys.banking.domain.Account;
-import java.util.Arrays;
+import de.adorsys.banking.domain.BankingService;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -16,22 +16,22 @@ public class AccountController {
 
   private static Logger log = LoggerFactory.getLogger(AccountController.class);
 
-//  private BankingService bankingService;
+  private BankingService bankingService;
 
-//  public AccountServlet(BankingService bankingService) {
-//    this.bankingService = Params.notNull(bankingService, "bankingService");
-//  }
+  public AccountController(BankingService bankingService) {
+    this.bankingService = Params.notNull(bankingService, "bankingService");
+  }
 
   @GetMapping("/accounts")
   public List<Account> getAccountList() {
-    return Arrays.asList(new Account("DE12345", 1000, "EUR", "Basti"));
+    return bankingService.readAccounts();
   }
 
   @GetMapping("/accounts/{iban}")
-  public Account getAccount(@PathVariable String iban) {
-    if (iban.equals("DE12345")) {
-      return new Account("DE12345", 1000, "EUR", "Basti");
-    }
-    return null;
+  public ResponseEntity<Account> getAccount(@PathVariable String iban) {
+
+    return bankingService.readAccount(iban)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
   }
 }
